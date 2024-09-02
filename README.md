@@ -20,7 +20,7 @@ Use the `train.py` script to train the model. To train the default model on
 CIFAR-10 simply use:
 
 ```
-python3 src/train.py --label_dir ./label_noise --configs_path ./remote/<..CONFIG_FILE..>.csv --config_index 1 --config_count 1 --trial_count 3
+python3 feature-magnitude-regularization/train.py --data_dir ./model_data --dataset_list_dir . --dataset_files_dir <DATASETDIR> --configs_path experiments/<CONFIG>.csv --config_index 0 --config_count 1
 ```
 
 Parameters:
@@ -28,7 +28,7 @@ Parameters:
 - dataset_files_dir: Path to the dataset files
 - dataset_list_dir: Path to the dataset lists
 - configs_path: Path to the configuration data file.
-- config_index: One-based index into the configuration table.
+- config_index: One-based index into the table in the configuration data file.
 - config_count: Number of configs to run at once.
 - config_skip: Skip the first X configs in the selected range
 - use_thorough_test: If provided, test on ten augmentations.
