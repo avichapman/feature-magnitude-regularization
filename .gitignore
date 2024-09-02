@@ -1,0 +1,4 @@
+results/
+src/__pycache__/
+.idea/
+resnet50-0676ba61.pth
