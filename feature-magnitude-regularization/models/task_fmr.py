@@ -30,7 +30,7 @@ class FMRTask(Task):
                  use_task: bool,
                  feature_vector_size: int,
                  class_count: int,
-                 entropy_increase_loss_coef_method: FMRLossMethod,
+                 fmr_loss_coef_method: FMRLossMethod,
                  max_fmr_coefficient: float,
                  running_average_length: int,
                  target_layer: str = 'posterior_features',
@@ -44,7 +44,7 @@ class FMRTask(Task):
         :param feature_vector_size: The number of expected feature channels output from the encoder that feeds data into
         this task.
         :param class_count: The number of classes in the classifier.
-        :param entropy_increase_loss_coef_method: Determines if we calculate the FMR coefficient and how.
+        :param fmr_loss_coef_method: Determines if we calculate the FMR coefficient and how.
         :param max_fmr_coefficient: The maximum FMR coefficient to use in dynamically calculating the FMR Coefficient at
         runtime.
         :param target_layer: Where to apply the entropy loss. Options are 'posterior_features' and 'logits'.
@@ -63,16 +63,15 @@ class FMRTask(Task):
         self.softmax_tau = ArgumentHelper.check_type(softmax_tau, float)
         self.coefficient = ArgumentHelper.check_type(coefficient, float)
         self.desired_initial_coefficient = ArgumentHelper.check_type(desired_initial_coefficient, float)
-        self.entropy_increase_loss_coef_method = \
-            ArgumentHelper.check_type(entropy_increase_loss_coef_method, FMRLossMethod)
+        self.fmr_loss_coef_method = ArgumentHelper.check_type(fmr_loss_coef_method, FMRLossMethod)
         self.max_fmr_coefficient = ArgumentHelper.check_type(max_fmr_coefficient, float)
 
         target_layer_options = ['posterior_features', 'logits']
         self.target_layer = ArgumentHelper.check_type(target_layer, str)
         assert self.target_layer in target_layer_options, f"Invalid target_layer. Options: {target_layer_options}"
 
-        self.use_dynamic_fmr = self.entropy_increase_loss_coef_method in [FMRLossMethod.DYNAMICALLY_CALCULATED,
-                                                                          FMRLossMethod.META_CALCULATED]
+        self.use_dynamic_fmr = self.fmr_loss_coef_method in [FMRLossMethod.DYNAMICALLY_CALCULATED,
+                                                             FMRLossMethod.META_CALCULATED]
 
         self.ce = nn.CrossEntropyLoss()
         self.running_entropy_average = AverageMeter(running_average=True, data_length=self.running_average_length)
@@ -82,7 +81,7 @@ class FMRTask(Task):
         self.initial_entropy = None
         self.calculated_max_fmr_coefficient = None
 
-        if self.entropy_increase_loss_coef_method == FMRLossMethod.STATICALLY_CALCULATED:
+        if self.fmr_loss_coef_method == FMRLossMethod.STATICALLY_CALCULATED:
             a = -6.651525319124698e-05
             b = 0.6751367912970034
             self.entropy_increase_loss_coef = math.pow(10., a * len(self.datasets['train']) + b)
@@ -91,11 +90,10 @@ class FMRTask(Task):
     def get_settings_str(self) -> str:
         """:returns a string containing all settings for this task."""
 
-        msg = 'Use Entropy Increase Aux Task?: {0}\n'.format(self.use_task)
-        msg += 'Entropy Increase Aux Task Loss Coefficient: {0}\n'.format(self.coefficient)
-        msg += 'Entropy Increase Target Layer: {0}\n'.format(self.target_layer)
-        msg += 'Entropy Increase Aux Task Loss Coefficient Determination Method: {0}\n'.format(
-            self.entropy_increase_loss_coef_method)
+        msg = 'Use FMR Aux Task?: {0}\n'.format(self.use_task)
+        msg += 'FMR Aux Task Loss Coefficient: {0}\n'.format(self.coefficient)
+        msg += 'FMR Target Layer: {0}\n'.format(self.target_layer)
+        msg += 'FMR Aux Task Loss Coefficient Determination Method: {0}\n'.format(self.fmr_loss_coef_method)
         msg += 'Target Entropy for Dynamic FMR Loss Coefficient: {0}\n'.format(self.entropy_target)
         msg += 'Max Coefficient for Dynamic FMR Loss Coefficient: {0}\n'.format(self.max_fmr_coefficient)
         msg += 'Temperature to treat feature vector before softmax: {0}'.format(self.softmax_tau)
@@ -177,7 +175,7 @@ class FMRTask(Task):
             current_entropy = self.running_entropy_average.get_final_value()
             target_entropy = self.entropy_target
 
-            if self.entropy_increase_loss_coef_method == FMRLossMethod.META_CALCULATED:
+            if self.fmr_loss_coef_method == FMRLossMethod.META_CALCULATED:
                 max_fmr_coefficient = self.calculated_max_fmr_coefficient
             else:
                 max_fmr_coefficient = self.max_fmr_coefficient

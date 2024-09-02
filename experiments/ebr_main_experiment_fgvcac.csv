@@ -1,5 +1,5 @@
 # List of configurations
-Dataset,TrialIndex,LabelRatio,IterationCount,LR,ClsRatio,PretrainedEncoder,EncoderModel,OptimizerModel,BatchSize,UseEntropyIncrease,EntropyIncreaseCoef,EBRMethod,EntropyIncreaseCoefMethod,MaxFMRCoef
+Dataset,TrialIndex,LabelRatio,IterationCount,LR,ClsRatio,PretrainedEncoder,EncoderModel,OptimizerModel,BatchSize,UseFMR,FMRCoef,EBRMethod,FMRCoefMethod,MaxFMRCoef
 FGVCAC,0,10,30001,0.001,10.0,TRUE,ResNet50,SGD,24,FALSE,0.0,CROSS_ENTROPY,META_CALCULATED,0.0
 FGVCAC,0,15,30001,0.001,10.0,TRUE,ResNet50,SGD,24,FALSE,0.0,CROSS_ENTROPY,META_CALCULATED,0.0
 FGVCAC,0,30,30001,0.001,10.0,TRUE,ResNet50,SGD,24,FALSE,0.0,CROSS_ENTROPY,META_CALCULATED,0.0

@@ -5,7 +5,7 @@ from typing import List
 
 
 class FMRLossMethod(Enum):
-    """Possible ways to calculate the EBR loss coefficient."""
+    """Possible ways to calculate the FMR loss coefficient."""
 
     PROVIDED = 'provided'
     """
@@ -73,10 +73,10 @@ class Configuration:
     batch_size: int
     is_encoder_pretrained: bool
     pretraining_source: str
-    use_entropy_increase: bool
-    entropy_increase_loss_coef: float
-    entropy_increase_loss_coef_method: FMRLossMethod
-    entropy_increase_target_layer: str
+    use_fmr: bool
+    fmr_loss_coef: float
+    fmr_loss_coef_method: FMRLossMethod
+    fmr_target_layer: str
     desired_initial_coefficient: float
     max_fmr_coefficient: float
     softmax_tau: float
@@ -169,42 +169,42 @@ class Configurator:
                     else:
                         configuration.batch_size = None
 
-                    if 'UseEntropyIncrease' in fields:
-                        configuration.use_entropy_increase = fields['UseEntropyIncrease'].upper() == "TRUE"
+                    if 'UseFMR' in fields:
+                        configuration.use_fmr = fields['UseFMR'].upper() == "TRUE"
                     else:
-                        configuration.use_entropy_increase = False
+                        configuration.use_fmr = False
 
-                    if 'EntropyIncreaseCoef' in fields:
-                        configuration.entropy_increase_loss_coef = float(fields['EntropyIncreaseCoef'])
+                    if 'FMRCoef' in fields:
+                        configuration.fmr_loss_coef = float(fields['FMRCoef'])
                     else:
-                        configuration.entropy_increase_loss_coef = None
+                        configuration.fmr_loss_coef = None
 
                     if 'MetaDesiredCoef' in fields:
                         configuration.desired_initial_coefficient = float(fields['MetaDesiredCoef'])
                     else:
                         configuration.desired_initial_coefficient = 50.
 
-                    if 'EntropyIncreaseCoefMethod' in fields:
-                        value = fields['EntropyIncreaseCoefMethod'].strip().lower()
+                    if 'FMRCoefMethod' in fields:
+                        value = fields['FMRCoefMethod'].strip().lower()
                         if value == 'provided':
-                            configuration.entropy_increase_loss_coef_method = FMRLossMethod.PROVIDED
+                            configuration.fmr_loss_coef_method = FMRLossMethod.PROVIDED
                         elif value == 'statically_calculated':
-                            configuration.entropy_increase_loss_coef_method = FMRLossMethod.STATICALLY_CALCULATED
+                            configuration.fmr_loss_coef_method = FMRLossMethod.STATICALLY_CALCULATED
                         elif value == 'dynamically_calculated':
-                            configuration.entropy_increase_loss_coef_method = FMRLossMethod.DYNAMICALLY_CALCULATED
+                            configuration.fmr_loss_coef_method = FMRLossMethod.DYNAMICALLY_CALCULATED
                         elif value == 'meta_calculated':
-                            configuration.entropy_increase_loss_coef_method = FMRLossMethod.META_CALCULATED
+                            configuration.fmr_loss_coef_method = FMRLossMethod.META_CALCULATED
                         else:
                             options = ", ".join([str(value.value) for value in FMRLossMethod])
                             raise ValueError(
-                                f"Invalid value for 'EntropyIncreaseCoefMethod'. Must be one of {options}")
+                                f"Invalid value for 'FMRCoefMethod'. Must be one of {options}")
                     else:
-                        configuration.entropy_increase_loss_coef_method = FMRLossMethod.PROVIDED
+                        configuration.fmr_loss_coef_method = FMRLossMethod.PROVIDED
 
-                    if 'EBRTargetLayer' in fields:
-                        configuration.entropy_increase_target_layer = fields['EBRTargetLayer'].strip()
+                    if 'FMRTargetLayer' in fields:
+                        configuration.fmr_target_layer = fields['FMRTargetLayer'].strip()
                     else:
-                        configuration.entropy_increase_target_layer = 'posterior_features'
+                        configuration.fmr_target_layer = 'posterior_features'
 
                     if 'MaxFMRCoef' in fields:
                         configuration.max_fmr_coefficient = float(fields['MaxFMRCoef'])

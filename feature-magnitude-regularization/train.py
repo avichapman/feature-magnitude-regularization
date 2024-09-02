@@ -36,10 +36,10 @@ class FMRTrainer:
                  dataset_name: str,
                  is_encoder_pretrained: bool,
                  pretraining_source: str,
-                 use_entropy_increase: bool,
-                 entropy_increase_loss_coef: float,
-                 entropy_increase_loss_coef_method: FMRLossMethod,
-                 entropy_increase_target_layer: str,
+                 use_fmr: bool,
+                 fmr_loss_coef: float,
+                 fmr_loss_coef_method: FMRLossMethod,
+                 fmr_target_layer: str,
                  max_fmr_coefficient: float,
                  softmax_tau: float,
                  model_weights_dir: str,
@@ -75,11 +75,11 @@ class FMRTrainer:
         :param data_files_root: Root directory of the files to load. If the lists contain relative paths, they will be
         relative to this path.
         :param dataset_name: The name of the dataset to load.
-        :param use_entropy_increase: If true, use an entropy reduction aux task.
+        :param use_fmr: If true, use an entropy reduction aux task.
         :param is_encoder_pretrained: If true, the encoder model will start with pre-trained weights.
         :param pretraining_source: The source of the pretrained weights. Options are 'imagenet' and 'moco_v2'.
-        :param entropy_increase_loss_coef: The loss coefficient associated with the entropy reduction aux task.
-        :param entropy_increase_loss_coef_method: Determines if we calculate the FMR coefficient and how.
+        :param fmr_loss_coef: The loss coefficient associated with the entropy reduction aux task.
+        :param fmr_loss_coef_method: Determines if we calculate the FMR coefficient and how.
         :param max_fmr_coefficient: The maximum FMR coefficient to use in dynamically calculating the FMR Coefficient at
         runtime.
         :param softmax_tau: The temperature value to treat the feature vector with before applying a softmax.
@@ -189,17 +189,16 @@ class FMRTrainer:
             encoder_model=self.encoder_model).to(self.device, non_blocking=True)
 
         self.fmr_task = FMRTask(
-            use_task=ArgumentHelper.check_type(use_entropy_increase, bool),
-            target_layer=ArgumentHelper.check_type(entropy_increase_target_layer, str),
+            use_task=ArgumentHelper.check_type(use_fmr, bool),
+            target_layer=ArgumentHelper.check_type(fmr_target_layer, str),
             feature_vector_size=self.model.feature_vector_size,
             class_count=self.model.class_count,
-            entropy_increase_loss_coef_method=ArgumentHelper.check_type(entropy_increase_loss_coef_method,
-                                                                        FMRLossMethod),
+            fmr_loss_coef_method=ArgumentHelper.check_type(fmr_loss_coef_method, FMRLossMethod),
             max_fmr_coefficient=ArgumentHelper.check_type(max_fmr_coefficient, float),
             running_average_length=50,
             softmax_tau=ArgumentHelper.check_type(softmax_tau, float),
             desired_initial_coefficient=ArgumentHelper.check_type(desired_initial_coefficient, float),
-            coefficient=ArgumentHelper.check_type(entropy_increase_loss_coef, float)
+            coefficient=ArgumentHelper.check_type(fmr_loss_coef, float)
         )
 
         if self.optimizer_model.upper() == 'SGD':
@@ -619,9 +618,9 @@ class FMRTrainer:
             'dataset_name': self.dataset_name,
             'is_encoder_pretrained': self.is_encoder_pretrained,
             'pretraining_source': self.pretraining_source,
-            'use_entropy_increase': self.fmr_task.use_task,
-            'entropy_increase_loss_coef': self.fmr_task.coefficient,
-            'entropy_increase_loss_coef_method': self.fmr_task.entropy_increase_loss_coef_method,
+            'use_fmr': self.fmr_task.use_task,
+            'fmr_loss_coef': self.fmr_task.coefficient,
+            'fmr_loss_coef_method': self.fmr_task.fmr_loss_coef_method,
             'entropy_increase_target_layer': self.fmr_task.target_layer,
             'desired_initial_coefficient': self.fmr_task.desired_initial_coefficient,
             'max_fmr_coefficient': self.fmr_task.max_fmr_coefficient,
@@ -740,10 +739,10 @@ if __name__ == "__main__":
         encoder_model_ = _configuration.encoder_model
         is_encoder_pretrained_ = _configuration.is_encoder_pretrained
         pretraining_source_ = _configuration.pretraining_source
-        use_entropy_increase_ = _configuration.use_entropy_increase
-        entropy_increase_loss_coef_ = _configuration.entropy_increase_loss_coef
-        entropy_increase_loss_coef_method_ = _configuration.entropy_increase_loss_coef_method
-        entropy_increase_target_layer_ = _configuration.entropy_increase_target_layer
+        use_fmr_ = _configuration.use_fmr
+        fmr_loss_coef_ = _configuration.fmr_loss_coef
+        fmr_loss_coef_method_ = _configuration.fmr_loss_coef_method
+        fmr_target_layer_ = _configuration.fmr_target_layer
         desired_initial_coefficient_ = _configuration.desired_initial_coefficient
         optimizer_model_ = _configuration.optimizer_model
         batch_size_ = _configuration.batch_size
@@ -766,9 +765,9 @@ if __name__ == "__main__":
             samples_per_class_,
             encoder_model_,
             is_encoder_pretrained_,
-            use_entropy_increase_,
-            entropy_increase_loss_coef_,
-            entropy_increase_loss_coef_method_,
+            use_fmr_,
+            fmr_loss_coef_,
+            fmr_loss_coef_method_,
             max_fmr_coefficient_)
         _config_subname += '.{0}.[{1}].[{2}].{3}.{4}.{5}.{6}.[{7}].[{8}].{9}'.format(
             planned_training_iterations_,
@@ -780,7 +779,7 @@ if __name__ == "__main__":
             pretraining_source_,
             softmax_tau_,
             desired_initial_coefficient_,
-            entropy_increase_target_layer_
+            fmr_target_layer_
         )
 
         if args.use_relative_dataset_dir == 1:
@@ -813,10 +812,10 @@ if __name__ == "__main__":
             batch_size=batch_size_,
             is_encoder_pretrained=is_encoder_pretrained_,
             pretraining_source=pretraining_source_,
-            use_entropy_increase=use_entropy_increase_,
-            entropy_increase_loss_coef=entropy_increase_loss_coef_,
-            entropy_increase_loss_coef_method=entropy_increase_loss_coef_method_,
-            entropy_increase_target_layer=entropy_increase_target_layer_,
+            use_fmr=use_fmr_,
+            fmr_loss_coef=fmr_loss_coef_,
+            fmr_loss_coef_method=fmr_loss_coef_method_,
+            fmr_target_layer=fmr_target_layer_,
             desired_initial_coefficient=desired_initial_coefficient_,
             max_fmr_coefficient=max_fmr_coefficient_,
             softmax_tau=softmax_tau_,
