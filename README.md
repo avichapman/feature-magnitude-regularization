@@ -1,6 +1,6 @@
 # feature-magnitude-regularization
 
-This is a Python3 / [Pytorch](https://pytorch.org/) implementation of FMR, as described in the paper **"Enhancing Fine-Grained Visual Recognition in the Low-Data Regime Through Feature Magnitude Regularization"**, by Avraham Chapmanm, Haiming Xiu and Lingqiao Liu.
+This is a Python3 / [Pytorch](https://pytorch.org/) implementation of FMR, as described in the paper **"Enhancing Fine-Grained Visual Recognition in the Low-Data Regime Through Feature Magnitude Regularization"**, by Avraham Chapmanm, Haiming Xu and Lingqiao Liu.
 
 ## Abstract
 
