@@ -3,10 +3,10 @@ from typing import Dict, Tuple, Union, Optional
 
 from torch.utils.data import DataLoader
 
-from dataset_cub_200 import CUB200
-from dataset_fgvc_aircraft import DatasetFgvcAircraft
-from dataset_inaturalist import DatasetINaturalist
-from dataset_stanford_cars import DatasetStanfordCars
+from .dataset_cub_200 import CUB200
+from .dataset_fgvc_aircraft import DatasetFgvcAircraft
+from .dataset_inaturalist import DatasetINaturalist
+from .dataset_stanford_cars import DatasetStanfordCars
 
 FgvcDataset = Union[CUB200, DatasetFgvcAircraft, DatasetStanfordCars]
 

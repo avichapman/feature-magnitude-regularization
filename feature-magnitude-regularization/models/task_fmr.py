@@ -4,10 +4,10 @@ import torch
 import torch.nn as nn
 from typing import Iterator, Optional
 
-from ..tools.argument_helper import ArgumentHelper
-from ..tools.average_meter import AverageMeter
-from ..configuration import FMRLossMethod
-from task import Task
+from tools.argument_helper import ArgumentHelper
+from tools.average_meter import AverageMeter
+from configuration import FMRLossMethod
+from .task import Task
 
 
 class FMRTask(Task):

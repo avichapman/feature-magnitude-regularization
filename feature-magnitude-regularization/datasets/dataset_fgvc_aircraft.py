@@ -3,9 +3,9 @@ import os.path
 
 from torch.utils.data import DataLoader
 
-from ..tools.argument_helper import ArgumentHelper
-from dataset_imagelist import ImageList
-from transforms import TransformTrain, imagenet_mean, imagenet_std, TransformTest
+from tools.argument_helper import ArgumentHelper
+from .dataset_imagelist import ImageList
+from .transforms import TransformTrain, imagenet_mean, imagenet_std, TransformTest
 
 
 class DatasetFgvcAircraft(ImageList):

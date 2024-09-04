@@ -8,8 +8,8 @@ from torchvision.datasets.folder import default_loader
 from torchvision.transforms import Compose
 import numpy as np
 
-import transforms
-from ..tools.argument_helper import ArgumentHelper
+from .transforms import ResizeImage, PlaceCrop
+from tools.argument_helper import ArgumentHelper
 
 
 class ImageList(datasets.VisionDataset):
@@ -181,8 +181,8 @@ class ImageList(datasets.VisionDataset):
         crop_size = 224
         start_center = (resize_size - crop_size - 1) / 2
         transform = Compose([
-            transforms.ResizeImage(resize_size),
-            transforms.PlaceCrop(crop_size, start_center, start_center)
+            ResizeImage(resize_size),
+            PlaceCrop(crop_size, start_center, start_center)
         ])
 
         img = Image.open(img_path).convert('RGB')

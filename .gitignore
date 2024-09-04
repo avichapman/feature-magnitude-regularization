@@ -1,4 +1,7 @@
 results/
-src/__pycache__/
+feature-magnitude-regularization/__pycache__/
+feature-magnitude-regularization/datasets/__pycache__/
+feature-magnitude-regularization/models/__pycache__/
+feature-magnitude-regularization/tools/__pycache__/
 .idea/
 resnet50-0676ba61.pth

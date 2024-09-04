@@ -8,8 +8,8 @@ from PIL import Image
 from torch.utils.data import Dataset, DataLoader
 from torchvision.transforms import Compose, Resize, RandomHorizontalFlip, RandomResizedCrop, ToTensor, Normalize
 
-import transforms
-from ..tools.argument_helper import ArgumentHelper
+from .transforms import imagenet_mean, imagenet_std, TransformTest, ResizeImage, PlaceCrop
+from tools.argument_helper import ArgumentHelper
 
 
 class DatasetINaturalist(Dataset):
@@ -191,14 +191,14 @@ class DatasetINaturalist(Dataset):
                 RandomHorizontalFlip(),
                 RandomResizedCrop(224),
                 ToTensor(),
-                Normalize(transforms.imagenet_mean, transforms.imagenet_std)])]
+                Normalize(imagenet_mean, imagenet_std)])]
         else:
             if self.single_test_transform:
-                return [transforms.TransformTest(mean=transforms.imagenet_mean,
-                                                 std=transforms.imagenet_std)['test9']]
+                return [TransformTest(mean=imagenet_mean,
+                                      std=imagenet_std)['test9']]
             else:
-                return list(transforms.TransformTest(mean=transforms.imagenet_mean,
-                                                     std=transforms.imagenet_std).values())
+                return list(TransformTest(mean=imagenet_mean,
+                                          std=imagenet_std).values())
 
     def __len__(self):
         return len(self.filtered_data)
@@ -239,8 +239,8 @@ class DatasetINaturalist(Dataset):
         crop_size = 224
         start_first = 0
         transform = Compose([
-            transforms.ResizeImage(resize_size),
-            transforms.PlaceCrop(crop_size, start_first, start_first)
+            ResizeImage(resize_size),
+            PlaceCrop(crop_size, start_first, start_first)
         ])
 
         img_path, _ = self.filtered_data[index]

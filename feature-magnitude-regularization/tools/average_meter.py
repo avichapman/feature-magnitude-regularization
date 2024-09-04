@@ -1,6 +1,6 @@
 import statistics
 
-from argument_helper import ArgumentHelper
+from .argument_helper import ArgumentHelper
 
 
 class AverageMeter:

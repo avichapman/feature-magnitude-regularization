@@ -5,8 +5,8 @@ import torch.nn as nn
 from torch.utils import model_zoo
 import torch.utils.data
 
-from ..tools.argument_helper import ArgumentHelper
-from model_resnet import resnet18, resnet50
+from tools.argument_helper import ArgumentHelper
+from .model_resnet import resnet18, resnet50
 
 model_urls = {
     'resnet18': 'https://download.pytorch.org/models/resnet18-f37072fd.pth',

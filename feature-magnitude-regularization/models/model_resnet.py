@@ -8,7 +8,7 @@ import torch.utils.model_zoo as model_zoo
 __all__ = ['ResNet', 'resnet18', 'resnet34', 'resnet50', 'resnet101',
            'resnet152']
 
-from ..tools.argument_helper import ArgumentHelper
+from tools.argument_helper import ArgumentHelper
 
 model_urls = {
     'resnet18': 'https://download.pytorch.org/models/resnet18-5c106cde.pth',

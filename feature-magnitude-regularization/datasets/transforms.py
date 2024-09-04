@@ -1,5 +1,5 @@
 from torchvision import transforms
-from randaugment import RandAugmentMC
+from .randaugment import RandAugmentMC
 from PIL import Image
 
 imagenet_mean = (0.485, 0.456, 0.406)

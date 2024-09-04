@@ -45,7 +45,7 @@ If you find this code useful please cite us in your work:
 ```
 @inproceedings{Chapman2024FMR,
   title={Enhancing Fine-Grained Visual Recognition in the Low-Data Regime Through Feature Magnitude Regularization},
-  author={Avraham Chapman, Haiming Xiu and Lingqiao Liu},
+  author={Avraham Chapman, Haiming Xu and Lingqiao Liu},
   booktitle={DICTA},
   year={2024}
 }
